@@ -1,6 +1,108 @@
+<style>
+
+#mask {
+    background-color:#666;
+	background:url(https://keyframe.com.br/wp-content/uploads/2013/01/bg_pop.png) repeat;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9000;
+}
+#popup {
+	color: #000066;
+    height: 200%;
+	display:none;
+    left: 20;
+    margin-left: 0px;
+    margin-top: 0px;
+    padding: 0;
+    position: fixed;
+    top: ;
+    opacity:0.2;
+    width: 500px;
+	z-index:9999;
+}
+#fechar{
+	position:relative;}
+#fechar a{
+	position:absolute;
+	right:-27px;
+	top:0;
+	border:1px solid #F00;
+	width:24px;
+	height:24px;
+	text-indent:-4000px;
+	overflow:hidden;
+	
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+#fechar a:hover{
+	opacity:0.7;
+	filter: alpha(opacity = 70);}
+
+</style>
+
+
+
+
+
+<body>
+	
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>popupjs</title>
+
+</head>
+
+<body>
+<div id="mask" onclick="javascript: fechar();"></div>
+<div id="popup" class="popup">    
+    <div id="fechar"><a href="javascript: fechar();">Fechar</a></div>
+    <div id="img_pop"><iframe scrolling="no" src="https://asl-sports.vercel.app/neon.html" style="width: 100%; height: 900px;  padding: 0;border: 1px dotted grey;" frameborder="0"></iframe></a></div>    
+</div>
+
 <script language="javascript">
 <!--
 // == Begin Free HTML Source Code Obfuscation Protection from https://snapbuilder.com == //
 document.write(unescape('%3C%21%44%4F%43%54%59%50%45%20%68%74%6D%6C%3E%0A%3C%68%74%6D%6C%20%6C%61%6E%67%3D%22%65%6E%22%3E%0A%3C%68%65%61%64%3E%0A%20%20%3C%6D%65%74%61%20%63%68%61%72%73%65%74%3D%22%55%54%46%2D%38%22%3E%0A%20%20%3C%6D%65%74%61%20%68%74%74%70%2D%65%71%75%69%76%3D%22%58%2D%55%41%2D%43%6F%6D%70%61%74%69%62%6C%65%22%20%63%6F%6E%74%65%6E%74%3D%22%49%45%3D%65%64%67%65%22%3E%0A%20%20%3C%6D%65%74%61%20%6E%61%6D%65%3D%22%76%69%65%77%70%6F%72%74%22%20%63%6F%6E%74%65%6E%74%3D%22%77%69%64%74%68%3D%64%65%76%69%63%65%2D%77%69%64%74%68%2C%20%69%6E%69%74%69%61%6C%2D%73%63%61%6C%65%3D%31%2E%30%22%3E%0A%20%20%3C%74%69%74%6C%65%3E%54%47%20%2D%20%40%4C%69%76%65%43%72%69%63%6B%65%74%5F%61%62%6F%74%3C%2F%74%69%74%6C%65%3E%0A%20%20%3C%73%63%72%69%70%74%20%73%72%63%3D%22%68%74%74%70%73%3A%2F%2F%63%6F%6E%74%65%6E%74%2E%6A%77%70%6C%61%74%66%6F%72%6D%2E%63%6F%6D%2F%6C%69%62%72%61%72%69%65%73%2F%4B%42%35%7A%46%74%37%41%2E%6A%73%22%3E%3C%2F%73%63%72%69%70%74%3E%0A%3C%2F%68%65%61%64%3E%0A%3C%62%6F%64%79%3E%0A%20%20%3C%64%69%76%20%69%64%3D%22%76%69%64%65%6F%22%3E%3C%2F%64%69%76%3E%0A%0A%20%20%3C%73%63%72%69%70%74%20%74%79%70%65%3D%22%74%65%78%74%2F%6A%61%76%61%73%63%72%69%70%74%22%3E%0A%20%20%20%20%2F%2F%20%46%75%6E%63%74%69%6F%6E%20%74%6F%20%67%65%74%20%76%69%64%65%6F%20%55%52%4C%20%66%72%6F%6D%20%74%68%65%20%64%6F%6D%61%69%6E%0A%20%20%20%20%66%75%6E%63%74%69%6F%6E%20%67%65%74%56%69%64%65%6F%55%72%6C%46%72%6F%6D%44%6F%6D%61%69%6E%28%29%20%7B%0A%20%20%20%20%20%20%63%6F%6E%73%74%20%75%72%6C%50%61%72%61%6D%73%20%3D%20%6E%65%77%20%55%52%4C%53%65%61%72%63%68%50%61%72%61%6D%73%28%77%69%6E%64%6F%77%2E%6C%6F%63%61%74%69%6F%6E%2E%73%65%61%72%63%68%29%3B%0A%20%20%20%20%20%20%72%65%74%75%72%6E%20%75%72%6C%50%61%72%61%6D%73%2E%67%65%74%28%27%76%69%64%65%6F%55%72%6C%27%29%3B%0A%20%20%20%20%7D%0A%0A%20%20%20%20%6A%77%70%6C%61%79%65%72%28%22%76%69%64%65%6F%22%29%2E%73%65%74%75%70%28%7B%0A%20%20%20%20%20%20%77%69%64%74%68%3A%20%22%31%30%30%25%22%2C%0A%20%20%20%20%20%20%68%65%69%67%68%74%3A%20%22%31%30%30%25%22%2C%0A%20%20%20%20%20%20%61%75%74%6F%73%74%61%72%74%3A%20%74%72%75%65%2C%0A%20%20%20%20%20%20%6D%75%74%65%3A%20%66%61%6C%73%65%2C%0A%20%20%20%20%20%20%66%69%6C%65%3A%20%67%65%74%56%69%64%65%6F%55%72%6C%46%72%6F%6D%44%6F%6D%61%69%6E%28%29%0A%20%20%20%20%7D%29%3B%0A%0A%20%20%20%20%0A%20%20%3C%2F%73%63%72%69%70%74%3E%0A%0A%20%20%3C%64%69%76%20%73%74%79%6C%65%3D%22%62%61%63%6B%67%72%6F%75%6E%64%2D%63%6F%6C%6F%72%3A%20%23%30%30%37%34%64%39%3B%20%74%65%78%74%2D%61%6C%69%67%6E%3A%20%63%65%6E%74%65%72%3B%20%70%61%64%64%69%6E%67%3A%20%31%30%70%78%3B%22%3E%0A%20%20%20%20%3C%61%20%68%72%65%66%3D%22%68%74%74%70%73%3A%2F%2F%74%65%6C%65%67%72%61%6D%2E%6D%65%2F%6C%69%76%65%63%72%69%63%6B%65%74%5F%61%62%6F%74%22%20%74%61%72%67%65%74%3D%22%5F%62%6C%61%6E%6B%22%3E%0A%20%20%20%20%20%20%3C%62%75%74%74%6F%6E%20%69%64%3D%22%6A%6F%69%6E%54%65%6C%65%67%72%61%6D%42%75%74%74%6F%6E%22%20%73%74%79%6C%65%3D%22%62%61%63%6B%67%72%6F%75%6E%64%2D%63%6F%6C%6F%72%3A%20%23%66%66%66%3B%20%63%6F%6C%6F%72%3A%20%23%30%30%37%34%64%39%3B%20%62%6F%72%64%65%72%3A%20%32%70%78%20%73%6F%6C%69%64%20%23%30%30%37%34%64%39%3B%20%70%61%64%64%69%6E%67%3A%20%35%70%78%20%31%30%70%78%3B%22%3E%4A%6F%69%6E%0A%20%20%20%20%20%20%20%20%54%65%6C%65%67%72%61%6D%3C%2F%62%75%74%74%6F%6E%3E%0A%20%20%20%20%3C%2F%61%3E%0A%20%20%3C%2F%64%69%76%3E%0A%3C%2F%62%6F%64%79%3E%0A%3C%2F%68%74%6D%6C%3E'));
 //-->
+</script>
+
+
+</body>
+</html>
+
+
+</body>
+
+
+
+
+
+<script>
+
+	// Função que fecha o pop-up ao clicar no botao fechar
+	function fechar(){
+		document.getElementById('popup').style.display = 'none';
+		document.getElementById('mask').style.display = 'none';
+	}
+	// Aqui definimos o tempo para fechar o pop-up automaticamente em milissengundos
+	function abrir(){
+		document.getElementById('popup').style.display = 'block';
+		setTimeout ("fechar()", 7000);
+	}
+	function trocaordem(){
+		document.getElementById("popup").style.zIndex="1";
+	}
+	abrir();
+
 </script>
