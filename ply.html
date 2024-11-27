@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASL SPORTS</title>
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.2/plyr.css" />
+    <link href="https://cdn.jsdelivr.net/gh/halfmoonui/halfmoon@1.0.4/css/halfmoon.min.css" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/bf2610f0a2.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdn.plyr.io/3.6.2/plyr.polyfilled.js"></script>
+    <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>
+</head>
+
+<body>
+    <video id="player" controls preload="metadata" class="plyr" style="display: none;">
+        <source id="videoSource" />
+    </video>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const video = document.querySelector("video");
+            const sourceElement = document.getElementById("videoSource");
+
+            function getVideoUrl() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const videoSrc = urlParams.get("videoUrl");
+                return videoSrc;
+            }
+
+            const videoSrc = getVideoUrl();
+
+            if (videoSrc) {
+                video.style.display = "block";
+
+                const playerOptions = {
+                    controls: [
+                        'play-large',
+                        'play',
+                        'mute',
+                        'volume',
+                        'settings',
+                        'pip',
+                        'airplay',
+                        'fullscreen',
+                    ],
+                    autoplay: true,
+                    seek: 0,
+                    disableContextMenu: true,
+                };
+
+                sourceElement.src = videoSrc;
+
+                if (Hls.isSupported()) {
+                    const hls = new Hls({ maxMaxBufferLength: 100 });
+                    hls.loadSource(videoSrc);
+                    hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+                        const availableQualities = hls.levels.map(level => level.height);
+                        playerOptions.quality = {
+                            default: availableQualities[0],
+                            options: availableQualities,
+                            forced: true,
+                            onChange: quality => {
+                                hls.levels.forEach((level, index) => {
+                                    if (level.height === quality) hls.currentLevel = index;
+                                });
+                            }
+                        };
+                        new Plyr(video, playerOptions);
+                    });
+                    window.hls = hls;
+                } else {
+                    new Plyr(video, playerOptions);
+                }
+            } else {
+                alert("No video URL specified.");
+            }
+        });
+
+        if (confirm("Join Our Telegram Channel ASL SPORTS More Links")) {
+            window.location.href = "https://telegram.me/livecricket_abot";
+        }
+    </script>
+
+    <script type="text/javascript">
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.oncontextmenu = null;
+        document.onselectstart = null;
+        document.ondragstart = null;
+        document.onmousedown = null;
+        document.body.oncontextmenu = null;
+
+document.body.onselectstart = null;
+        document.body.ondragstart = null;
+        document.body.onmousedown = null;
+        document.body.oncut = null;
+        document.body.oncopy = null;
+        document.body.onpaste = null;
+        document.addEventListener('keydown', event => {
+            if (event.keyCode === 123 || (event.ctrlKey && event.shiftKey && event.keyCode === 73)) {
+                event.preventDefault();
+            }
+        });
+    </script>
+</body>
+
+</html>
