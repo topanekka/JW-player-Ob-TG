@@ -113,15 +113,14 @@ document.body.onselectstart = null;
 </html>
 
 
-<!-- Open M3U8 Link Button -->
-<div style="margin-top: 20px; text-align: center;">
-    <button onclick="openM3U8()" class="btn btn-secondary">Open M3U8 Link</button>
+<!-- Floating Open M3U8 Link Button -->
+<div style="position: fixed; top: 10px; left: 10px; z-index: 1000;">
+    <button onclick="openM3U8()" class="btn btn-secondary">OPEN LINK | Only for India |</button>
 </div>
-
 <script>
     function openM3U8() {
         const urlParams = new URLSearchParams(window.location.search);
-        const videoSrc = urlParams.get('intent:"+url+"#Intent;package=com.genuine.leone;type=video/mp4;end;", '_blank');
+        const videoSrc = urlParams.get("url");
 
         if (videoSrc) {
             window.open(videoSrc, "_blank");
