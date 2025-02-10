@@ -121,7 +121,7 @@ document.body.onselectstart = null;
 <script>
     function openM3U8() {
         const urlParams = new URLSearchParams(window.location.search);
-        const videoSrc = urlParams.get("url");
+        const videoSrc = urlParams.get("intent:+url+#Intent;package=com.genuine.leone;type=video/mp4;end;");
 
         if (videoSrc) {
             window.open(videoSrc, "_blank");
