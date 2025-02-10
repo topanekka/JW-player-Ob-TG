@@ -138,3 +138,48 @@ document.body.onselectstart = null;
 }
 </script>
 
+<!-- Floating Open M3U8 Link Buttons -->
+<div style="position: fixed; top: 10px; left: 10px; z-index: 1000;">
+    <button onclick="openM3U8()" class="btn btn-secondary">OPEN LINK | Only for India |</button>
+    <button onclick="openInMXPlayer()" class="btn btn-primary">OPEN IN NS PLAYER</button>
+</div>
+
+<script>
+    function getOriginalM3U8Link() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("url");
+    }
+
+    function getUpdatedM3U8Link() {
+        const videoSrc = getOriginalM3U8Link();
+        if (videoSrc) {
+            const oldPrefix = "https://buddyxiptv.com/fancode/global/primary/";
+            const newPrefix = "https://dai.fancode.com/primary/";
+
+            if (videoSrc.startsWith(oldPrefix)) {
+                const remainingPath = videoSrc.substring(oldPrefix.length);
+                return newPrefix + remainingPath;
+            }
+        }
+        return videoSrc;
+    }
+
+    function openM3U8() {
+        const videoSrc = getUpdatedM3U8Link();
+        if (videoSrc) {
+            window.open(videoSrc, "_blank");
+        } else {
+            alert("No video URL specified.");
+        }
+    }
+
+    function openInMXPlayer() {
+        const videoSrc = getOriginalM3U8Link(); // Use the original M3U8 link without replacing
+        if (videoSrc) {
+            const mxPlayerIntent = `intent:${videoSrc}#Intent;package=com.genuine.leone;type=video/*;end;`;
+            window.location.href = mxPlayerIntent;
+        } else {
+            alert("No video URL specified.");
+        }
+    }
+</script>
