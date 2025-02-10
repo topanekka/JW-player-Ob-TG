@@ -119,13 +119,22 @@ document.body.onselectstart = null;
 </div>
 <script>
     function openM3U8() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const videoSrc = urlParams.get("url");
+    const urlParams = new URLSearchParams(window.location.search);
+    let videoSrc = urlParams.get("url");
 
-        if (videoSrc) {
-            window.open(videoSrc, "_blank");
-        } else {
-            alert("No video URL specified.");
+    if (videoSrc) {
+        const oldPrefix = "https://buddyxiptv.com/fancode/global/primary/";
+        const newPrefix = "https://dai.fancode.com/primary/";
+
+        if (videoSrc.startsWith(oldPrefix)) {
+            const remainingPath = videoSrc.substring(oldPrefix.length); // Extract the last part of the link
+            videoSrc = newPrefix + remainingPath; // Replace prefix and keep the last part
         }
+
+        window.open(videoSrc, "_blank");
+    } else {
+        alert("No video URL specified.");
     }
+}
 </script>
+
