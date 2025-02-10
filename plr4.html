@@ -138,8 +138,8 @@ document.body.onselectstart = null;
 
 <!-- Floating Open M3U8 Link Buttons -->
 <div style="position: fixed; top: 10px; left: 10px; z-index: 1000;">
-    <button onclick="openM3U8()" class="btn btn-secondary">OPEN LINK | Only for India |</button>
-    <button onclick="openInMXPlayer()" class="btn btn-primary">OPEN IN NS PLAYER</button>
+    <button onclick="openM3U8()" class="btn btn-secondary"style="brown; color: white;">OPEN LINK | Only for India |</button>
+    <button onclick="openInMXPlayer()" class="btn btn-primary"style="background-color: orange; color: white;">PLAY IN NS PLAYER</button>
 </div>
 
 <script>
@@ -179,5 +179,44 @@ document.body.onselectstart = null;
         } else {
             alert("No video URL specified.");
         }
+    }
+</script>
+<!-- Floating Buttons in One Row -->
+<div style="position: fixed; top: 60px; left: 10px; z-index: 1000; display: flex; gap: 10px;">
+    <button onclick="shareVideo()" class="btn" style="background-color: red; color: white;">SHARE</button>
+    <button onclick="joinTelegram()" class="btn" style="background-color: #0088cc; color: white;">JOIN TELEGRAM</button>
+    <button onclick="joinWhatsApp()" class="btn" style="background-color: green; color: white;">JOIN WHATSAPP</button>
+</div>
+
+<script>
+    function getVideoLink() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("url");
+    }
+
+    function shareVideo() {
+        const videoSrc = getVideoLink();
+        if (videoSrc) {
+            const shareText = `Watch this live Match: ${videoSrc}`;
+            if (navigator.share) {
+                navigator.share({
+                    title: "Live Stream",
+                    text: shareText,
+                    url: videoSrc
+                }).catch(err => console.log("Error sharing:", err));
+            } else {
+                prompt("Copy this link to share:", videoSrc);
+            }
+        } else {
+            alert("No video URL specified.");
+        }
+    }
+
+    function joinTelegram() {
+        window.open("https://t.me/livecricket_abot", "_blank"); // Replace with your Telegram link
+    }
+
+    function joinWhatsApp() {
+        window.open("https://chat.whatsapp.com/yourwhatsapplink", "_blank"); // Replace with your WhatsApp group link
     }
 </script>
