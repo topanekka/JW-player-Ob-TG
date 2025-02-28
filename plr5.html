@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JW Player</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="//content.jwplatform.com/libraries/SAHhwvZq.js"></script>
+    <style>
+        body {
+            margin: 0;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #jwplayerDiv {
+            width: 100%;
+            height: 100%;
+        }
+        /* Pop-up Styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            backdrop-filter: blur(10px);
+        }
+        .popup-box {
+            background: linear-gradient(135deg, #1e1e1e, #333);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.2);
+            max-width: 350px;
+            width: 90%;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .popup-box h2 {
+            color: white;
+            margin-bottom: 10px;
+        }
+        .popup-box p {
+            color: #bdbdbd;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        .popup-box a {
+            display: inline-block;
+            background: #0088cc;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .popup-box a:hover {
+            background: #0077b6;
+        }
+        .close-popup {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div id="jwplayerDiv"></div>
+
+    <!-- Telegram Pop-up -->
+    <div class="popup-overlay" id="popup">
+        <div class="popup-box">
+            <h2>Join Our whatsapp group</h2>
+            <p>Stay updated with the latest live matches & premium content.</p>
+            <a href="https://chat.whatsapp.com/FErB2xRlnZC8ALpQ63dm9D" target="_blank">Join Now</a>
+            <br>
+            <button class="close-popup" onclick="closePopup()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        function getQueryParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        const videoUrl = getQueryParam('url'); // Get 'url' parameter
+
+        if (videoUrl) {
+            jwplayer("jwplayerDiv").setup({
+                file: videoUrl,
+                width: "100%",
+                height: "100%",
+                autostart: true,
+                stretching: "uniform",
+                type: videoUrl.includes('.mpd') ? "dash" : "hls",
+            });
+        } else {
+            document.body.innerHTML = "<h2 style='color:white;text-align:center;'>Invalid or Missing Video URL</h2>";
+        }
+
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+        }
+    </script>
+</body>
+</html>
