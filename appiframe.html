@@ -1,0 +1,37 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Slider</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        .swiper-container { width: 100%; max-width:100%; }
+        .swiper-slide { display: flex; justify-content: center; align-items: center; }
+        img { width: 100%; border-radius: 10px; }
+    </style>
+</head>
+<body bgcolor="black">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"><img src="https://iili.io/3C2CxJj.md.jpg" alt="App 1"></div>
+            <div class="swiper-slide"><img src="https://iili.io/3C2Ccga.md.jpg" alt="App 2"></div>
+            <div class="swiper-slide"><img src="https://iili.io/3C2CedG.md.jpg" alt="App 3"></div>
+            <div class="swiper-slide"><img src="https://iili.io/3C2CAzB.md.jpg" alt="App 3"></div>
+            <div class="swiper-slide"><img src="https://iili.io/3C2CP1e.md.jpg alt="App 3"></div>
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div><script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+<script>
+    var swiper = new Swiper('.swiper-container', {
+        loop: true,
+        autoplay: { delay: 2500, disableOnInteraction: false },
+        pagination: { el: '.swiper-pagination', clickable: true },
+        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }
+    });
+</script>
+
+</body>
+</html>
