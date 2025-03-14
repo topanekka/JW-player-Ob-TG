@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Share</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background: #f4f4f4;
+            text-align: center;
+            padding: 50px;
+        }
+        h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        input {
+            padding: 10px;
+            width: 80%;
+            max-width: 300px;
+            border: 2px solid #25d366;
+            border-radius: 20px;
+            outline: none;
+            text-align: center;
+            font-size: 16px;
+        }
+        .floating-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25d366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        .floating-button:hover {
+            transform: scale(1.1);
+            background-color: #1da851;
+        }
+        .floating-button img {
+            width: 30px;
+            height: 30px;
+        }
+        #displayMessage {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #444;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Enter Your Name:</h2>
+    <input type="text" id="userName" placeholder="Your Name">
+    
+    <div class="floating-button" onclick="shareOnWhatsApp()">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+    </div>
+
+    <h2 id="displayMessage"></h2>
+
+    <script>
+        function shareOnWhatsApp() {
+            let name = document.getElementById("userName").value;
+            if (name.trim() === "") {
+                alert("Please enter your name!");
+                return;
+            }
+            let shareURL = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(name)}`;
+            let whatsappURL = `https://wa.me/?text=Hey!%20Visit%20this%20link:%20${encodeURIComponent(shareURL)}`;
+            window.open(whatsappURL, "_blank");
+        }
+
+        function getQueryParam(param) {
+            let urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        let visitorName = getQueryParam("name");
+        if (visitorName) {
+            document.getElementById("displayMessage").innerText = `This page was shared by ${visitorName}`;
+        }
+    </script>
+
+</body>
+</html>
