@@ -14,11 +14,35 @@
         body {
             background: #f4f4f4;
             text-align: center;
-            padding: 50px;
+            padding: 20px;
+        }
+        .share-message {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #444;
+        }
+        .blinking-name {
+            font-size: 40px;
+            font-weight: bold;
+            color: #ff5722;
+            animation: blink 1s infinite alternate;
+        }
+        @keyframes blink {
+            0% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+        .main-content {
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
         h2 {
-            margin-bottom: 15px;
-            color: #333;
+            margin-bottom: 10px;
+        }
+        .input-container {
+            margin-top: 50px;
         }
         input {
             padding: 10px;
@@ -54,24 +78,25 @@
             width: 30px;
             height: 30px;
         }
-        #displayMessage {
-            margin-top: 20px;
-            font-size: 18px;
-            color: #444;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
 
-    <h2>Enter Your Name:</h2>
-    <input type="text" id="userName" placeholder="Your Name">
-    
+    <div id="sharedMessage"></div>
+
+    <div class="main-content">
+        <h2>Welcome to My Website</h2>
+        <p>This is the main content of the website.</p>
+    </div>
+
+    <div class="input-container">
+        <h2>Enter Your Name:</h2>
+        <input type="text" id="userName" placeholder="Your Name">
+    </div>
+
     <div class="floating-button" onclick="shareOnWhatsApp()">
         <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
     </div>
-
-    <h2 id="displayMessage"></h2>
 
     <script>
         function shareOnWhatsApp() {
@@ -92,7 +117,10 @@
 
         let visitorName = getQueryParam("name");
         if (visitorName) {
-            document.getElementById("displayMessage").innerText = `This page was shared by ${visitorName}`;
+            document.getElementById("sharedMessage").innerHTML = `
+                <div class="share-message">Shared by</div>
+                <div class="blinking-name">${visitorName}</div>
+            `;
         }
     </script>
 
