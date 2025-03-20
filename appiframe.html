@@ -1,128 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhatsApp Share</title>
+    <title>App Slider</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-        body {
-            background: #f4f4f4;
-            text-align: center;
-            padding: 20px;
-        }
-        .share-message {
-            margin-top: 20px;
-            font-size: 20px;
-            color: #444;
-        }
-        .blinking-name {
-            font-size: 40px;
-            font-weight: bold;
-            color: #ff5722;
-            animation: blink 1s infinite alternate;
-        }
-        @keyframes blink {
-            0% { opacity: 1; }
-            100% { opacity: 0.4; }
-        }
-        .main-content {
-            margin-top: 30px;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        h2 {
-            margin-bottom: 10px;
-        }
-        .input-container {
-            margin-top: 50px;
-        }
-        input {
-            padding: 10px;
-            width: 80%;
-            max-width: 300px;
-            border: 2px solid #25d366;
-            border-radius: 20px;
-            outline: none;
-            text-align: center;
-            font-size: 16px;
-        }
-        .floating-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #25d366;
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            transition: transform 0.3s ease, background 0.3s ease;
-        }
-        .floating-button:hover {
-            transform: scale(1.1);
-            background-color: #1da851;
-        }
-        .floating-button img {
-            width: 30px;
-            height: 30px;
-        }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        .swiper-container { width: 100%; max-width:100%; }
+        .swiper-slide { display: flex; justify-content: center; align-items: center; }
+        img { width: 100%; border-radius: 10px; }
     </style>
 </head>
-<body>
-
-    <div id="sharedMessage"></div>
-
-    <div class="main-content">
-        <h2>Welcome to My Website</h2>
-        <p>This is the main content of the website.</p>
-    </div>
-
-    <div class="input-container">
-        <h2>Enter Your Name:</h2>
-        <input type="text" id="userName" placeholder="Your Name">
-    </div>
-
-    <div class="floating-button" onclick="shareOnWhatsApp()">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-    </div>
-
-    <script>
-        function shareOnWhatsApp() {
-            let name = document.getElementById("userName").value;
-            if (name.trim() === "") {
-                alert("Please enter your name!");
-                return;
-            }
-            let shareURL = `${window.location.origin}${window.location.pathname}?name=${encodeURIComponent(name)}`;
-            let whatsappURL = `https://wa.me/?text=Hey!%20Visit%20this%20link:%20${encodeURIComponent(shareURL)}`;
-            window.open(whatsappURL, "_blank");
-        }
-
-        function getQueryParam(param) {
-            let urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
-        }
-
-        let visitorName = getQueryParam("name");
-        if (visitorName) {
-            document.getElementById("sharedMessage").innerHTML = `
-                <div class="share-message">Shared by</div>
-                <div class="blinking-name">${visitorName}</div>
-            `;
-        }
-    </script>
+<body bgcolor="black">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"><img src="https://iili.io/3C2CxJj.md.jpg" alt="App 1"></div>
+            <div class="swiper-slide"><img src="https://iili.io/3C2Ccga.md.jpg" alt="App 2"></div>
+            <div class="swiper-slide"><img src="https://iili.io/3C2CedG.md.jpg" alt="App 3"></div>
+            <div class="swiper-slide"><img src="https://iili.io/3C2CAzB.md.jpg" alt="App 3"></div>
+            <div class="swiper-slide"><img src="https://iili.io/3C2CP1e.md.jpg alt="App 3"></div>
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div><script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+<script>
+    var swiper = new Swiper('.swiper-container', {
+        loop: true,
+        autoplay: { delay: 2500, disableOnInteraction: false },
+        pagination: { el: '.swiper-pagination', clickable: true },
+        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' }
+    });
+</script>
 
 </body>
 </html>
