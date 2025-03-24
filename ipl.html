@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPL 2025 Full Schedule</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: black;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .match-card {
+            width: 600px;
+            height: 120px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        .match-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        .team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100px;
+        }
+        .team-logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color:black;
+            padding: 5px;
+        }
+        .match-info {
+            text-align: center;
+            flex-grow: 1;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .vs {
+            font-size: 25px;
+            font-weight: bold;
+            color: red;
+            margin-bottom: 5px;
+        }
+        .match-details {
+            font-size: 12px;
+            font-weight: bold;
+            color: black;
+        }
+        .countdown {
+            font-size: 15px;
+            font-weight: bold;
+            color: #d9534f;
+            margin-top: 5px;
+        }
+        .live {
+            font-size: 17px;
+            font-weight: bold;
+            color: white;
+            background-color: red;
+            padding: 5px 10px;
+            border-radius: 5px;
+            animation: blink 0.5s infinite alternate;
+        }
+        @keyframes blink {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="container">
+        <div class="match-card" data-match-time="March 22, 2025 18:30:00">
+            <div class="team">
+                <img src="https://scores.iplt20.com/ipl/teamlogos/KKR.png" alt="KKR Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">KKR</p>
+            </div>
+            <div class="match-info">
+                <div class="match-details">
+                    <p><strong>22-Mar-2025</strong> | 7:30 PM IST</p>
+                    <div class="vs">VS</div>
+                    <p> Match No.1 | Kolkata</p>
+                    <p class="countdown"></p>
+                </div>
+            </div>
+            <div class="team">
+                <img src="https://scores.iplt20.com/ipl/teamlogos/RCB.png" alt="RCB Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">RCB</p>
+            </div>
+        </div>
+
+        <div class="match-card" data-match-time="March 23, 2025 15:00:00">
+            <div class="team">
+                <img src="https://scores.iplt20.com/ipl/teamlogos/SRH.png" alt="SRH Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">SRH</p>
+            </div>
+            <div class="match-info">
+                <div class="match-details">
+                    <p><strong>23-Mar-2025</strong> | 3:30 PM IST</p>
+                    <div class="vs">VS</div>
+                    <p> Match No.2 | Guwahati</p>
+                    <p class="countdown"></p>
+                </div>
+            </div>
+            <div class="team">
+                <img src="https://scores.iplt20.com/ipl/teamlogos/RR.png" alt="RR Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">RR</p>
+            </div>
+        </div>
+
+        <div class="match-card" data-match-time="March 23, 2025 18:30:00">
+            <div class="team">
+                <img src="https://scores.iplt20.com/ipl/teamlogos/MI.png" alt="MI Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">MI</p>
+            </div>
+            <div class="match-info">
+                <div class="match-details">
+                    <p><strong>23-Mar-2025</strong> | 7:30 PM IST</p>
+                    <div class="vs">VS</div>
+                    <p>Match No.3 | Chennai</p>
+                    <p class="countdown"></p>
+                </div>
+            </div>
+            <div class="team">
+                <img src="https://scores.iplt20.com/ipl/teamlogos/CSK.png" alt="CSK Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">CSK</p>
+            </div>
+        </div>
+        
+        
+        <div class="match-card" data-match-time="March 24, 2025 18:30:00">
+            <div class="team">
+                <img src="https://documents.iplt20.com/ipl/DC/Logos/LogoOutline/DCoutline.png" alt="SRH Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">DC</p>
+            </div>
+            <div class="match-info">
+                <div class="match-details">
+                    <p><strong>24-Mar-2025</strong> | 7:30 PM IST</p>
+                    <div class="vs">VS</div>
+                    <p> Match No.4 | Visakhapatnam</p>
+                    <p class="countdown"></p>
+                </div>
+            </div>
+            <div class="team">
+                <img src="https://documents.iplt20.com/ipl/LSG/Logos/Logooutline/LSGoutline.png" alt="RR Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">LSG</p>
+            </div>
+        </div>
+        
+        <div class="match-card" data-match-time="March 25, 2025 18:30:00">
+            <div class="team">
+                <img src="https://documents.iplt20.com/ipl/GT/Logos/Logooutline/GToutline.png" alt="SRH Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">GT</p>
+            </div>
+            <div class="match-info">
+                <div class="match-details">
+                    <p><strong>25-Mar-2025</strong> | 7:30 PM IST</p>
+                    <div class="vs">VS</div>
+                    <p> Match No.5 | Ahmedabad</p>
+                    <p class="countdown"></p>
+                </div>
+            </div>
+            <div class="team">
+                <img src="https://documents.iplt20.com/ipl/PBKS/Logos/Logooutline/PBKSoutline.png" alt="RR Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">PBKS</p>
+            </div>
+        </div>
+        
+        <div class="match-card" data-match-time="March 26, 2025 18:30:00">
+            <div class="team">
+                <img src="https://documents.iplt20.com/ipl/RR/Logos/Logooutline/RRoutline.png" alt="SRH Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">RR</p>
+            </div>
+            <div class="match-info">
+                <div class="match-details">
+                    <p><strong>26-Mar-2025</strong> | 7:30 PM IST</p>
+                    <div class="vs">VS</div>
+                    <p> Match No.6 | Guwahati</p>
+                    <p class="countdown"></p>
+                </div>
+            </div>
+            <div class="team">
+                <img src="https://documents.iplt20.com/ipl/KKR/Logos/Logooutline/KKRoutline.png" alt="RR Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">KKR</p>
+            </div>
+        </div>
+        
+        <div class="match-card" data-match-time="March 27, 2025 18:30:00">
+            <div class="team">
+                <img src="https://documents.iplt20.com/ipl/SRH/Logos/Logooutline/SRHoutline.png" alt="SRH Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">SRH</p>
+            </div>
+            <div class="match-info">
+                <div class="match-details">
+                    <p><strong>27-Mar-2025</strong> | 7:30 PM IST</p>
+                    <div class="vs">VS</div>
+                    <p> Match No.7 | Hyderabad</p>
+                    <p class="countdown"></p>
+                </div>
+            </div>
+            <div class="team">
+                <img src="https://documents.iplt20.com/ipl/LSG/Logos/Logooutline/LSGoutline.png" alt="RR Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">LSG</p>
+            </div>
+        </div>
+        
+        <div class="match-card" data-match-time="March 28, 2025 18:30:00">
+            <div class="team">
+                <img src="https://documents.iplt20.com/ipl/CSK/logos/Logooutline/CSKoutline.png" alt="SRH Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">CSK</p>
+            </div>
+            <div class="match-info">
+                <div class="match-details">
+                    <p><strong>28-Mar-2025</strong> | 7:30 PM IST</p>
+                    <div class="vs">VS</div>
+                    <p> Match No.8 | Chennai</p>
+                    <p class="countdown"></p>
+                </div>
+            </div>
+            <div class="team">
+                <img src="https://documents.iplt20.com/ipl/RCB/Logos/Logooutline/RCBoutline.png" alt="RR Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">RCB</p>
+            </div>
+        </div>
+        
+        <div class="match-card" data-match-time="March 29, 2025 18:30:00">
+            <div class="team">
+                <img src="https://documents.iplt20.com/ipl/GT/Logos/Logooutline/GToutline.png" alt="SRH Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">GT</p>
+            </div>
+            <div class="match-info">
+                <div class="match-details">
+                    <p><strong>29-Mar-2025</strong> | 7:30 PM IST</p>
+                    <div class="vs">VS</div>
+                    <p> Match No.9 | Ahmedabad</p>
+                    <p class="countdown"></p>
+                </div>
+            </div>
+            <div class="team">
+                <img src="https://documents.iplt20.com/ipl/MI/Logos/Logooutline/MIoutline.png" alt="RR Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">MI</p>
+            </div>
+        </div>
+        
+        <div class="match-card" data-match-time="March 30, 2025 14:30:00">
+            <div class="team">
+                <img src="https://documents.iplt20.com/ipl/DC/Logos/LogoOutline/DCoutline.png" alt="SRH Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">DC</p>
+            </div>
+            <div class="match-info">
+                <div class="match-details">
+                    <p><strong>30-Mar-2025</strong> | 3:30 PM IST</p>
+                    <div class="vs">VS</div>
+                    <p> Match No.10 | Visakhapatnam</p>
+                    <p class="countdown"></p>
+                </div>
+            </div>
+            <div class="team">
+                <img src="https://documents.iplt20.com/ipl/SRH/Logos/Logooutline/SRHoutline.png" alt="RR Logo" class="team-logo">
+                <p style="font-size: 12px;font-weight: bold;color:green;">SRH</p>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+
+    <script>
+        function updateCountdowns() {
+            const matchCards = document.querySelectorAll(".match-card");
+            matchCards.forEach(card => {
+                const matchTime = new Date(card.getAttribute("data-match-time")).getTime();
+                const now = new Date().getTime();
+                const timeLeft = matchTime - now;
+                const matchDuration = 4 * 60 * 60 * 1000; // 4 hours in milliseconds
+
+                if (timeLeft > 0) {
+                    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                    card.querySelector(".countdown").innerHTML = `Starts in: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+                } else if (timeLeft > -matchDuration) {
+                    card.querySelector(".countdown").innerHTML = `<span class="live">LIVE NOW</span>`;
+                } else {
+                    card.style.display = "none"; // Hide the card after 4 hours
+                }
+            });
+        }
+        setInterval(updateCountdowns, 1000);
+        updateCountdowns();
+    </script>
+
+</body>
+  </html>
