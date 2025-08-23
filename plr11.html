@@ -3,7 +3,25 @@
 <head>  
     <title>Live Stream Player</title>  
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>  
-    <meta name="referrer" content="no-referrer"/>  
+    <meta name="referrer" content="no-referrer"/>
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="ASL SPORTS - Live Sports Streaming" />
+    <meta property="og:description" content="Watch this Live free. " />
+    <meta property="og:image" content="https://media.istockphoto.com/id/1319815121/vector/live-stream-sign-live-broadcast-button-for-blog-player-broadcast-website-online-radio-media.jpg?s=612x612&w=0&k=20&c=V8PRnbVnluFz3fV_edAsKkVHVqsm5dNAc5JRDDKhl6M=" />
+    <meta property="og:url" content="" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="ASL SPORTS" />
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ASL SPORTS - Live Sports Streaming" />
+    <meta name="twitter:description" content="Watch live sports matches, events and exclusive content on ASL SPORTS. Experience high-quality streaming with our professional sports broadcasting platform." />
+    <meta name="twitter:image" content="https://media.istockphoto.com/id/1319815121/vector/live-stream-sign-live-broadcast-button-for-blog-player-broadcast-website-online-radio-media.jpg?s=612x612&w=0&k=20&c=V8PRnbVnluFz3fV_edAsKkVHVqsm5dNAc5JRDDKhl6M=" />
+    
+    <!-- Additional Meta Tags -->
+    <meta name="description" content="Watch live sports matches, events and exclusive content on ASL SPORTS. Experience high-quality streaming with our professional sports broadcasting platform." />
+    <meta name="keywords" content="live sports, streaming, sports matches, ASL SPORTS, live broadcast, sports events" />  
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css"/>  
     <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool'></script>  
     <style>  
@@ -509,7 +527,11 @@
             // Handle share button click
             shareBtn.addEventListener('click', () => {
                 const currentUrl = window.location.href;
-                const shareMessage = 'Watch live sports streaming on ASL SPORTS! Download our app for unlimited access: ' + currentUrl;
+                const shareMessage = `What a Live Match is Going on Click here to Watch Live - ${currentUrl}
+
+Or Download this Android App 👇
+myapp-aslsports.vercel.app`;
+                
                 const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareMessage)}`;
                 
                 // Open WhatsApp with the message
