@@ -40,6 +40,47 @@
             font-weight: bold;  
             color: var(--plyr-color-main);  
             font-size: 1.1em;  
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-btn {
+            background: var(--plyr-color-main);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .header-btn:hover {
+            background: #0078d4;
+            transform: translateY(-1px);
+        }
+
+        .download-header-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+        }
+
+        .download-header-btn:hover {
+            background: linear-gradient(45deg, #ee5a52, #ff4757);
+        }
+
+        .share-btn {
+            background: linear-gradient(45deg, #5f27cd, #341f97);
+        }
+
+        .share-btn:hover {
+            background: linear-gradient(45deg, #341f97, #2d3436);
         }  
           
         .player-container {  
@@ -238,7 +279,15 @@
 </head>  
 <body>  
     <div class="header">  
-        <div class="logo">Live Stream Player</div>  
+        <div class="logo">ASL SPORTS</div>
+        <div class="header-buttons">
+            <a href="https://myapp-aslsports.vercel.app" class="header-btn download-header-btn" target="_blank">
+                📱 Download App
+            </a>
+            <button class="header-btn share-btn" id="share-btn">
+                🔗 Share
+            </button>
+        </div>
     </div>
 
     <div class="player-container">  
@@ -293,6 +342,7 @@
             const timerDisplay = document.getElementById('timer-display');
             const timerText = document.getElementById('timer-text');
             const blockedMessage = document.getElementById('blocked-message');
+            const shareBtn = document.getElementById('share-btn');
               
             // Get stream URL from query parameter  
             const urlParams = new URLSearchParams(window.location.search);  
@@ -454,6 +504,26 @@
             notification.addEventListener('click', () => {  
                 window.open('https://t.me/livecricket_abot', '_blank');  
                 notification.classList.remove('show');  
+            });
+
+            // Handle share button click
+            shareBtn.addEventListener('click', () => {
+                const currentUrl = window.location.href;
+                const shareMessage = 'Watch live sports streaming on ASL SPORTS! Download our app for unlimited access: ' + currentUrl;
+                const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareMessage)}`;
+                
+                // Open WhatsApp with the message
+                window.open(whatsappUrl, '_blank');
+                
+                // Show temporary confirmation
+                const originalText = shareBtn.innerHTML;
+                shareBtn.innerHTML = '✅ Shared!';
+                shareBtn.style.background = '#25D366'; // WhatsApp green
+                
+                setTimeout(() => {
+                    shareBtn.innerHTML = originalText;
+                    shareBtn.style.background = '';
+                }, 2000);
             });  
               
             // Handle fullscreen orientation  
