@@ -1,263 +1,352 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Live Stream Player</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    <title>Live Stream Player</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+    <meta name="referrer" content="no-referrer"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css"/>
+    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool'></script>
 
-  <style>
-    body {
-      margin: 0;
-      background: #000;
-      color: #fff;
-      font-family: Arial, sans-serif;
-    }
-    .player-wrapper {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      background: #000;
-    }
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-    #loading, #error-message {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      background: rgba(0,0,0,0.8);
-      z-index: 1000;
-      color: #fff;
-    }
-    #retry-btn {
-      margin-top: 10px;
-      padding: 8px 16px;
-      background: #00a8ff;
-      border: none;
-      color: #fff;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    #notification {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #00a8ff;
-      padding: 12px 18px;
-      border-radius: 6px;
-      color: #fff;
-      font-size: 14px;
-      display: none;
-      cursor: pointer;
-      z-index: 1500;
-      animation: slideIn 0.5s ease-out;
-    }
-    #notification.show {
-      display: block;
-    }
-    @keyframes slideIn {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
+    <style>
+        :root {
+            --plyr-color-main: #00a8ff;
+            --plyr-video-controls-background: rgba(0,0,0,0.7);
+            --plyr-video-control-color: #fff;
+            --plyr-control-radius: 8px;
+            --plyr-control-spacing: 10px;
+        }
+        
+        body {
+            background-color: #000;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .header {
+            padding: 12px 15px;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+        }
+        
+        .logo {
+            font-weight: bold;
+            color: var(--plyr-color-main);
+            font-size: 1.1em;
+        }
+        
+        .player-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        #player {
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+        
+        .loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.9);
+            z-index: 10;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: var(--plyr-color-main);
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--plyr-color-main);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 1000;
+            cursor: pointer;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .error-message {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.9);
+            z-index: 10;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .btn {
+            background: var(--plyr-color-main);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
 
-    /* -------- Force download overlay (professional look) -------- */
-    .download-overlay {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      backdrop-filter: blur(10px);
-      background: rgba(0,0,0,0.65);
-      z-index: 2000;
-      flex-direction: column;
-      padding: 20px;
-      animation: fadeIn 0.6s ease-in-out;
-    }
-    .overlay-box {
-      background: linear-gradient(135deg, rgba(0,168,255,0.9), rgba(156,39,176,0.9));
-      padding: 35px 25px;
-      border-radius: 18px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-      max-width: 420px;
-      width: 90%;
-      color: #fff;
-      text-align: center;
-      animation: popUp 0.4s ease-out;
-    }
-    .overlay-title {
-      font-size: 1.6em;
-      font-weight: bold;
-      margin-bottom: 12px;
-      color: #fff;
-      text-shadow: 0 2px 6px rgba(0,0,0,0.4);
-    }
-    .overlay-box p {
-      font-size: 1.05em;
-      line-height: 1.5;
-      margin-bottom: 18px;
-      color: #f1f1f1;
-    }
-    .countdown {
-      margin: 12px 0 18px;
-      font-size: 1.1em;
-      font-weight: bold;
-      color: #ffeb3b;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
-    }
-    .overlay-box .btn {
-      background: #ff1744;
-      border: none;
-      padding: 12px 22px;
-      border-radius: 10px;
-      font-size: 1em;
-      font-weight: bold;
-      color: white;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-    }
-    .overlay-box .btn:hover {
-      background: #e91e63;
-      transform: translateY(-2px);
-    }
-    @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
-    @keyframes popUp { from {transform:scale(0.9);} to {transform:scale(1);} }
-  </style>
+        /* Download modal */
+        #downloadModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            text-align: center;
+            padding: 20px;
+        }
+        #downloadModal h2 {
+            color: white;
+            margin-bottom: 15px;
+        }
+        #downloadModal p {
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+        #downloadModal a {
+            background: #00a8ff;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-  <div class="player-wrapper">
-    <video id="player" playsinline controls></video>
-    <div id="loading">Loading stream...</div>
-    <div id="error-message">
-      <p id="error-text">Error loading stream</p>
-      <button id="retry-btn">Retry</button>
+    <div class="header">
+        <div class="logo">Live Stream Player</div>
     </div>
-    <div id="notification">⚡ Join our Telegram for updates</div>
-
-    <!-- Force download overlay -->
-    <div class="download-overlay" id="downloadOverlay">
-      <div class="overlay-box">
-        <h2 class="overlay-title">⏳ Demo Ended</h2>
-        <p>Please download our app to continue watching live streams.</p>
-        <div class="countdown" id="countdown">You can try again in 60:00</div>
-        <a href="https://myapp-aslsports.vercel.app" target="_blank" class="btn">📲 Download App</a>
-      </div>
+    
+    <div class="player-container">
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <div>Loading stream...</div>
+        </div>
+        
+        <div class="error-message" id="error-message" style="display: none;">
+            <div id="error-text"></div>
+            <button class="btn" id="retry-btn">Retry</button>
+        </div>
+        
+        <video id="player" autoplay muted controls crossorigin playsinline></video>
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const video = document.getElementById('player');
-      const loadingElement = document.getElementById('loading');
-      const errorElement = document.getElementById('error-message');
-      const errorText = document.getElementById('error-text');
-      const retryBtn = document.getElementById('retry-btn');
-      const notification = document.getElementById('notification');
-      const downloadOverlay = document.getElementById('downloadOverlay');
-      const countdownElement = document.getElementById('countdown');
+    <div class="notification" id="notification">
+        Join ASL SPORTS for more updates →
+    </div>
 
-      // Demo restriction timer storage
-      const lastWatched = localStorage.getItem('demoEndTime');
-      if (lastWatched && Date.now() < parseInt(lastWatched)) {
-        showOverlay();
-      }
+    <!-- Force Download Modal -->
+    <div id="downloadModal">
+        <h2>⏳ Demo Ended</h2>
+        <p>Please download our app to continue watching.</p>
+        <a href="https://myapp-aslsports.vercel.app" target="_blank">📲 Download App</a>
+    </div>
 
-      let hls;
-      let player;
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.3/dist/hls.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const video = document.getElementById('player');
+            const loadingElement = document.getElementById('loading');
+            const errorElement = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+            const retryBtn = document.getElementById('retry-btn');
+            const notification = document.getElementById('notification');
+            const downloadModal = document.getElementById('downloadModal');
 
-      function initPlayer() {
-        loadingElement.style.display = 'flex';
-        errorElement.style.display = 'none';
+            // Check if demo already expired in last 1 hour
+            const demoEndedAt = localStorage.getItem("demoEndedAt");
+            const oneHour = 60 * 60 * 1000;
 
-        const urlParams = new URLSearchParams(window.location.search);
-        let source = urlParams.get('url') || "https://dai.google.com/linear/hls/event/gw6vKyUhQDOxptPtHIn22g/master.m3u8";
-
-        if (Hls.isSupported()) {
-          if (hls) hls.destroy();
-          hls = new Hls({ maxMaxBufferLength: 100, enableWorker: true, lowLatencyMode: true });
-          hls.loadSource(source);
-          hls.attachMedia(video);
-
-          hls.on(Hls.Events.MANIFEST_PARSED, () => {
-            player = new Plyr(video);
-            loadingElement.style.display = 'none';
-
-            // Force stop after 2 minutes
-            setTimeout(() => {
-              if (!video.paused) video.pause();
-              localStorage.setItem('demoEndTime', Date.now() + 3600000); // lock for 1 hour
-              showOverlay();
-            }, 120000);
-
-            // Show notification after 5s
-            setTimeout(() => {
-              notification.classList.add('show');
-              setTimeout(() => notification.classList.remove('show'), 8000);
-            }, 5000);
-          });
-
-          hls.on(Hls.Events.ERROR, (event, data) => {
-            if (data.fatal) {
-              let errorMsg = 'Error loading stream';
-              switch(data.type) {
-                case Hls.ErrorTypes.NETWORK_ERROR: errorMsg = 'Network error'; break;
-                case Hls.ErrorTypes.MEDIA_ERROR: errorMsg = 'Media error'; hls.recoverMediaError(); break;
-              }
-              loadingElement.style.display = 'none';
-              errorText.textContent = errorMsg;
-              errorElement.style.display = 'flex';
+            if (demoEndedAt && (Date.now() - demoEndedAt) < oneHour) {
+                // Block immediately
+                downloadModal.style.display = "flex";
+                return;
             }
-          });
 
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-          video.src = source;
-          player = new Plyr(video);
-          loadingElement.style.display = 'none';
-        } else {
-          loadingElement.style.display = 'none';
-          errorText.textContent = 'Your browser does not support HLS';
-          errorElement.style.display = 'flex';
-        }
-      }
+            // Get stream URL from query parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            let source = urlParams.get('url');
+            
+            if (!source) {
+                source = "https://dai.google.com/linear/hls/event/gw6vKyUhQDOxptPtHIn22g/master.m3u8";
+            }
+            
+            let hls;
+            let player;
+            
+            function initPlayer() {
+                loadingElement.style.display = 'flex';
+                errorElement.style.display = 'none';
+                
+                if (Hls.isSupported()) {
+                    if (hls) hls.destroy();
+                    
+                    hls = new Hls({
+                        maxMaxBufferLength: 100,
+                        enableWorker: true,
+                        lowLatencyMode: true
+                    });
+                    
+                    hls.loadSource(source);
+                    hls.attachMedia(video);
+                    
+                    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                        const availableQualities = hls.levels.map(level => level.height);
+                        const defaultQuality = availableQualities[0];
+                        
+                        player = new Plyr(video, {
+                            controls: [
+                                'play-large',
+                                'play',
+                                'progress',
+                                'current-time',
+                                'mute',
+                                'volume',
+                                'settings',
+                                'fullscreen'
+                            ],
+                            settings: ['quality', 'speed'],
+                            quality: {
+                                default: defaultQuality,
+                                options: availableQualities,
+                                forced: true,
+                                onChange: (quality) => {
+                                    hls.levels.forEach((level, levelIndex) => {
+                                        if (level.height === quality) {
+                                            hls.currentLevel = levelIndex;
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                        
+                        loadingElement.style.display = 'none';
 
-      retryBtn.addEventListener('click', initPlayer);
+                        // ⏳ Stop after 2 minutes
+                        setTimeout(() => {
+                            if (!video.paused) {
+                                video.pause();
+                            }
+                            downloadModal.style.display = "flex";
+                            localStorage.setItem("demoEndedAt", Date.now());
+                        }, 120000); // 2 minutes
 
-      function showOverlay() {
-        downloadOverlay.style.display = 'flex';
-        startCountdown();
-      }
-
-      function startCountdown() {
-        const endTime = parseInt(localStorage.getItem('demoEndTime'));
-        if (!endTime) return;
-        const interval = setInterval(() => {
-          const remaining = endTime - Date.now();
-          if (remaining <= 0) {
-            clearInterval(interval);
-            countdownElement.textContent = "You can now refresh to try again";
-            localStorage.removeItem('demoEndTime');
-          } else {
-            const mins = Math.floor(remaining / 60000);
-            const secs = Math.floor((remaining % 60000) / 1000);
-            countdownElement.textContent = `You can try again in ${mins}:${secs.toString().padStart(2,'0')}`;
-          }
-        }, 1000);
-      }
-
-      initPlayer();
-    });
-  </script>
+                        // Show notification after 5 seconds
+                        setTimeout(() => {
+                            notification.classList.add('show');
+                            setTimeout(() => {
+                                notification.classList.remove('show');
+                            }, 8000);
+                        }, 5000);
+                    });
+                    
+                    hls.on(Hls.Events.ERROR, (event, data) => {
+                        if (data.fatal) {
+                            let errorMsg = 'Error loading stream';
+                            
+                            switch(data.type) {
+                                case Hls.ErrorTypes.NETWORK_ERROR:
+                                    errorMsg = 'Network error: Failed to load stream';
+                                    break;
+                                case Hls.ErrorTypes.MEDIA_ERROR:
+                                    errorMsg = 'Media error: Corrupted stream data';
+                                    hls.recoverMediaError();
+                                    break;
+                                default:
+                                    errorMsg = 'Error loading stream';
+                                    break;
+                            }
+                            
+                            loadingElement.style.display = 'none';
+                            errorText.textContent = errorMsg;
+                            errorElement.style.display = 'flex';
+                        }
+                    });
+                    
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = source;
+                    player = new Plyr(video);
+                    loadingElement.style.display = 'none';
+                } else {
+                    loadingElement.style.display = 'none';
+                    errorText.textContent = 'Your browser does not support HLS playback';
+                    errorElement.style.display = 'flex';
+                }
+            }
+            
+            retryBtn.addEventListener('click', initPlayer);
+            
+            notification.addEventListener('click', () => {
+                window.open('https://t.me/livecricket_abot', '_blank');
+                notification.classList.remove('show');
+            });
+            
+            document.addEventListener('fullscreenchange', () => {
+                if (document.fullscreenElement) {
+                    if (screen.orientation?.lock) {
+                        screen.orientation.lock('landscape').catch(console.error);
+                    }
+                } else {
+                    if (screen.orientation?.unlock) {
+                        screen.orientation.unlock().catch(console.error);
+                    }
+                }
+            });
+            
+            initPlayer();
+        });
+    </script>
 </body>
 </html>
