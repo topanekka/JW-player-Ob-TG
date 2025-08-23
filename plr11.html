@@ -129,37 +129,73 @@
             cursor: pointer;
         }
 
-        /* Download modal */
+        /* 🔹 Force Download Modal (professional design) */
         #downloadModal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.95);
+            background: rgba(10, 10, 10, 0.96);
             display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 2000;
             text-align: center;
-            padding: 20px;
+            padding: 30px 20px;
+            animation: fadeIn 0.4s ease-in-out;
         }
+
+        #downloadModal .modal-box {
+            background: #111;
+            padding: 30px 25px;
+            border-radius: 16px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            animation: slideUp 0.5s ease;
+        }
+
         #downloadModal h2 {
-            color: white;
-            margin-bottom: 15px;
-        }
-        #downloadModal p {
-            color: #ccc;
-            margin-bottom: 20px;
-        }
-        #downloadModal a {
-            background: #00a8ff;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            text-decoration: none;
+            color: #00a8ff;
+            margin-bottom: 12px;
+            font-size: 1.6em;
             font-weight: bold;
+        }
+
+        #downloadModal p {
+            color: #ddd;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            line-height: 1.4em;
+        }
+
+        #downloadModal a {
+            display: inline-block;
+            background: linear-gradient(135deg, #00c6ff, #0072ff);
+            color: white;
+            padding: 12px 22px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1em;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #downloadModal a:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 18px rgba(0, 162, 255, 0.4);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        @keyframes slideUp {
+            from {transform: translateY(50px); opacity: 0;}
+            to {transform: translateY(0); opacity: 1;}
         }
     </style>
 </head>
@@ -186,11 +222,13 @@
         Join ASL SPORTS for more updates →
     </div>
 
-    <!-- Force Download Modal -->
+    <!-- 🔹 Force Download Modal -->
     <div id="downloadModal">
-        <h2>⏳ Demo Ended</h2>
-        <p>Please download our app to continue watching.</p>
-        <a href="https://myapp-aslsports.vercel.app" target="_blank">📲 Download App</a>
+        <div class="modal-box">
+            <h2>⏳ Demo Ended</h2>
+            <p>Please download our app to continue watching.</p>
+            <a href="https://myapp-aslsports.vercel.app" target="_blank">📲 Download App</a>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.3/dist/hls.min.js"></script>
