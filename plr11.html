@@ -1,390 +1,481 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Live Stream Player</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
-    <meta name="referrer" content="no-referrer"/>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css"/>
-    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool'></script>
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <title>Live Stream Player</title>  
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>  
+    <meta name="referrer" content="no-referrer"/>  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css"/>  
+    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool'></script>  
+    <style>  
+        :root {  
+            --plyr-color-main: #00a8ff;  
+            --plyr-video-controls-background: rgba(0,0,0,0.7);  
+            --plyr-video-control-color: #fff;  
+            --plyr-control-radius: 8px;  
+            --plyr-control-spacing: 10px;  
+        }  
+          
+        body {  
+            background-color: #000;  
+            margin: 0;  
+            padding: 0;  
+            font-family: Arial, sans-serif;  
+            color: white;  
+            height: 100vh;  
+            display: flex;  
+            flex-direction: column;  
+            overflow: hidden;  
+        }  
+          
+        .header {  
+            padding: 12px 15px;  
+            background: rgba(0,0,0,0.8);  
+            display: flex;  
+            justify-content: space-between;  
+            align-items: center;  
+            border-bottom: 1px solid #333;  
+        }  
+          
+        .logo {  
+            font-weight: bold;  
+            color: var(--plyr-color-main);  
+            font-size: 1.1em;  
+        }  
+          
+        .player-container {  
+            flex: 1;  
+            position: relative;  
+        }  
+          
+        #player {  
+            width: 100%;  
+            height: 100%;  
+            background: #000;  
+        }  
+          
+        .loading {  
+            position: absolute;  
+            top: 0;  
+            left: 0;  
+            width: 100%;  
+            height: 100%;  
+            display: flex;  
+            flex-direction: column;  
+            justify-content: center;  
+            align-items: center;  
+            background: rgba(0,0,0,0.9);  
+            z-index: 10;  
+        }  
+          
+        .spinner {  
+            width: 40px;  
+            height: 40px;  
+            border: 4px solid rgba(255,255,255,0.3);  
+            border-radius: 50%;  
+            border-top-color: var(--plyr-color-main);  
+            animation: spin 1s linear infinite;  
+            margin-bottom: 15px;  
+        }  
+          
+        @keyframes spin {  
+            to { transform: rotate(360deg); }  
+        }  
+          
+        .notification {  
+            position: fixed;  
+            bottom: 20px;  
+            right: 20px;  
+            background: var(--plyr-color-main);  
+            color: white;  
+            padding: 12px 18px;  
+            border-radius: 8px;  
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);  
+            z-index: 1000;  
+            cursor: pointer;  
+            transform: translateY(100px);  
+            opacity: 0;  
+            transition: all 0.3s ease;  
+        }  
+          
+        .notification.show {  
+            transform: translateY(0);  
+            opacity: 1;  
+        }  
+          
+        .error-message {  
+            position: absolute;  
+            top: 0;  
+            left: 0;  
+            width: 100%;  
+            height: 100%;  
+            display: flex;  
+            flex-direction: column;  
+            justify-content: center;  
+            align-items: center;  
+            background: rgba(0,0,0,0.9);  
+            z-index: 10;  
+            padding: 20px;  
+            text-align: center;  
+        }  
+          
+        .btn {  
+            background: var(--plyr-color-main);  
+            color: white;  
+            border: none;  
+            padding: 8px 16px;  
+            border-radius: 4px;  
+            margin-top: 15px;  
+            cursor: pointer;  
+        }
 
-    <style>
-        :root {
-            --plyr-color-main: #00a8ff;
-            --plyr-video-controls-background: rgba(0,0,0,0.7);
-            --plyr-video-control-color: #fff;
-            --plyr-control-radius: 8px;
-            --plyr-control-spacing: 10px;
-        }
-        
-        body {
-            background-color: #000;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            color: white;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        
-        .header {
-            padding: 12px 15px;
-            background: rgba(0,0,0,0.8);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #333;
-        }
-        
-        .logo {
-            font-weight: bold;
-            color: var(--plyr-color-main);
-            font-size: 1.1em;
-        }
-        
-        .player-container {
-            flex: 1;
-            position: relative;
-        }
-        
-        #player {
-            width: 100%;
-            height: 100%;
-            background: #000;
-        }
-        
-        .loading {
+        /* Demo Overlay Styles */
+        .demo-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: rgba(0,0,0,0.9);
-            z-index: 10;
-        }
-        
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: var(--plyr-color-main);
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--plyr-color-main);
-            color: white;
-            padding: 12px 18px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            z-index: 1000;
-            cursor: pointer;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-        
-        .notification.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        
-        .error-message {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: rgba(0,0,0,0.9);
-            z-index: 10;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .btn {
-            background: var(--plyr-color-main);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            margin-top: 15px;
-            cursor: pointer;
-        }
-
-        /* 🔹 Force Download Modal (professional design) */
-        #downloadModal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(10, 10, 10, 0.96);
+            background: linear-gradient(135deg, rgba(0,0,0,0.95), rgba(0,168,255,0.1));
             display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 2000;
+            z-index: 1000;
             text-align: center;
-            padding: 30px 20px;
-            animation: fadeIn 0.4s ease-in-out;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
-        #downloadModal .modal-box {
-            background: #111;
-            padding: 30px 25px;
-            border-radius: 16px;
+        .demo-overlay.show {
+            display: flex;
+        }
+
+        .demo-content {
+            background: rgba(0,0,0,0.8);
+            border-radius: 20px;
+            padding: 40px;
             max-width: 400px;
             width: 90%;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-            animation: slideUp 0.5s ease;
+            border: 2px solid var(--plyr-color-main);
+            box-shadow: 0 20px 40px rgba(0,168,255,0.2);
+            animation: slideUp 0.5s ease-out;
         }
 
-        #downloadModal h2 {
-            color: #00a8ff;
-            margin-bottom: 12px;
-            font-size: 1.6em;
-            font-weight: bold;
-        }
-
-        #downloadModal p {
-            color: #ddd;
-            margin-bottom: 20px;
-            font-size: 0.95em;
-            line-height: 1.4em;
-        }
-
-        #downloadModal a {
-            display: inline-block;
-            background: linear-gradient(135deg, #00c6ff, #0072ff);
-            color: white;
-            padding: 12px 22px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1em;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        #downloadModal a:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 18px rgba(0, 162, 255, 0.4);
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from {opacity: 0;}
-            to {opacity: 1;}
-        }
         @keyframes slideUp {
-            from {transform: translateY(50px); opacity: 0;}
-            to {transform: translateY(0); opacity: 1;}
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .demo-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--plyr-color-main);
+            margin-bottom: 15px;
+        }
+
+        .demo-subtitle {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .demo-description {
+            font-size: 14px;
+            color: #ccc;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .download-btn {
+            background: linear-gradient(45deg, var(--plyr-color-main), #0078d4);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,168,255,0.3);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,168,255,0.4);
+        }
+
+        .timer-display {
+            font-size: 12px;
+            color: var(--plyr-color-main);
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.7);
+            padding: 5px 10px;
+            border-radius: 15px;
+            z-index: 100;
+        }
+
+        .blocked-message {
+            font-size: 14px;
+            color: #ff4757;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .blocked-message.show {
+            display: block;
         }
     </style>
-</head>
-<body>
-    <div class="header">
-        <div class="logo">Live Stream Player</div>
+</head>  
+<body>  
+    <div class="header">  
+        <div class="logo">Live Stream Player</div>  
     </div>
-    
-    <div class="player-container">
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <div>Loading stream...</div>
+
+    <div class="player-container">  
+        <div class="loading" id="loading">  
+            <div class="spinner"></div>  
+            <div>Loading stream...</div>  
+        </div>  
+          
+        <div class="error-message" id="error-message" style="display: none;">  
+            <div id="error-text"></div>  
+            <button class="btn" id="retry-btn">Retry</button>  
         </div>
-        
-        <div class="error-message" id="error-message" style="display: none;">
-            <div id="error-text"></div>
-            <button class="btn" id="retry-btn">Retry</button>
+
+        <div class="timer-display" id="timer-display" style="display: none;">
+            Demo: <span id="timer-text">02:00</span>
         </div>
-        
+
+        <div class="demo-overlay" id="demo-overlay">
+            <div class="demo-content">
+                <div class="demo-title">🎬 Demo Completed!</div>
+                <div class="demo-subtitle">Want to continue watching?</div>
+                <div class="demo-description">
+                    Download our official ASL SPORTS app for unlimited streaming of all live sports events, matches, and exclusive content.
+                </div>
+                <a href="https://myapp-aslsports.vercel.app" class="download-btn" target="_blank">
+                    📱 Download App Now
+                </a>
+                <div class="blocked-message" id="blocked-message">
+                    ⏰ Please wait 1 hour before trying the demo again.
+                </div>
+            </div>
+        </div>
+          
         <video id="player" autoplay muted controls crossorigin playsinline></video>
-    </div>
+    </div>  
 
-    <div class="notification" id="notification">
-        Join ASL SPORTS for more updates →
-    </div>
+    <div class="notification" id="notification">  
+        Join ASL SPORTS for more updates →  
+    </div>  
 
-    <!-- 🔹 Force Download Modal -->
-    <div id="downloadModal">
-        <div class="modal-box">
-            <h2>⏳ Demo Ended</h2>
-            <p>Please download our app to continue watching.</p>
-            <a href="https://myapp-aslsports.vercel.app" target="_blank">📲 Download App</a>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.3/dist/hls.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const video = document.getElementById('player');
-            const loadingElement = document.getElementById('loading');
-            const errorElement = document.getElementById('error-message');
-            const errorText = document.getElementById('error-text');
-            const retryBtn = document.getElementById('retry-btn');
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.3/dist/hls.min.js"></script>  
+    <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js"></script>  
+    <script>  
+        document.addEventListener('DOMContentLoaded', () => {  
+            const video = document.getElementById('player');  
+            const loadingElement = document.getElementById('loading');  
+            const errorElement = document.getElementById('error-message');  
+            const errorText = document.getElementById('error-text');  
+            const retryBtn = document.getElementById('retry-btn');  
             const notification = document.getElementById('notification');
-            const downloadModal = document.getElementById('downloadModal');
-
-            // Check if demo already expired in last 1 hour
-            const demoEndedAt = localStorage.getItem("demoEndedAt");
-            const oneHour = 60 * 60 * 1000;
-
-            if (demoEndedAt && (Date.now() - demoEndedAt) < oneHour) {
-                // Block immediately
-                downloadModal.style.display = "flex";
-                return;
-            }
-
-            // Get stream URL from query parameter
-            const urlParams = new URLSearchParams(window.location.search);
-            let source = urlParams.get('url');
-            
-            if (!source) {
-                source = "https://dai.google.com/linear/hls/event/gw6vKyUhQDOxptPtHIn22g/master.m3u8";
-            }
-            
-            let hls;
+            const demoOverlay = document.getElementById('demo-overlay');
+            const timerDisplay = document.getElementById('timer-display');
+            const timerText = document.getElementById('timer-text');
+            const blockedMessage = document.getElementById('blocked-message');
+              
+            // Get stream URL from query parameter  
+            const urlParams = new URLSearchParams(window.location.search);  
+            let source = urlParams.get('url');  
+              
+            // Fallback to default stream if no URL provided  
+            if (!source) {  
+                source = "https://dai.google.com/linear/hls/event/gw6vKyUhQDOxptPtHIn22g/master.m3u8";  
+            }  
+              
+            let hls;  
             let player;
+            let demoTimer;
+            let remainingTime = 120; // 2 minutes in seconds
             
-            function initPlayer() {
-                loadingElement.style.display = 'flex';
-                errorElement.style.display = 'none';
+            // Check if user is blocked (within 1 hour)
+            function checkBlockStatus() {
+                const lastDemo = parseInt(localStorage.getItem('lastDemoTime') || '0');
+                const currentTime = Date.now();
+                const oneHour = 60 * 60 * 1000; // 1 hour in milliseconds
                 
-                if (Hls.isSupported()) {
-                    if (hls) hls.destroy();
-                    
-                    hls = new Hls({
-                        maxMaxBufferLength: 100,
-                        enableWorker: true,
-                        lowLatencyMode: true
-                    });
-                    
-                    hls.loadSource(source);
-                    hls.attachMedia(video);
-                    
-                    hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                        const availableQualities = hls.levels.map(level => level.height);
-                        const defaultQuality = availableQualities[0];
-                        
-                        player = new Plyr(video, {
-                            controls: [
-                                'play-large',
-                                'play',
-                                'progress',
-                                'current-time',
-                                'mute',
-                                'volume',
-                                'settings',
-                                'fullscreen'
-                            ],
-                            settings: ['quality', 'speed'],
-                            quality: {
-                                default: defaultQuality,
-                                options: availableQualities,
-                                forced: true,
-                                onChange: (quality) => {
-                                    hls.levels.forEach((level, levelIndex) => {
-                                        if (level.height === quality) {
-                                            hls.currentLevel = levelIndex;
-                                        }
-                                    });
-                                }
-                            }
-                        });
-                        
-                        loadingElement.style.display = 'none';
-
-                        // ⏳ Stop after 2 minutes
-                        setTimeout(() => {
-                            if (!video.paused) {
-                                video.pause();
-                            }
-                            downloadModal.style.display = "flex";
-                            localStorage.setItem("demoEndedAt", Date.now());
-                        }, 120000); // 2 minutes
-
-                        // Show notification after 5 seconds
-                        setTimeout(() => {
-                            notification.classList.add('show');
-                            setTimeout(() => {
-                                notification.classList.remove('show');
-                            }, 8000);
-                        }, 5000);
-                    });
-                    
-                    hls.on(Hls.Events.ERROR, (event, data) => {
-                        if (data.fatal) {
-                            let errorMsg = 'Error loading stream';
-                            
-                            switch(data.type) {
-                                case Hls.ErrorTypes.NETWORK_ERROR:
-                                    errorMsg = 'Network error: Failed to load stream';
-                                    break;
-                                case Hls.ErrorTypes.MEDIA_ERROR:
-                                    errorMsg = 'Media error: Corrupted stream data';
-                                    hls.recoverMediaError();
-                                    break;
-                                default:
-                                    errorMsg = 'Error loading stream';
-                                    break;
-                            }
-                            
-                            loadingElement.style.display = 'none';
-                            errorText.textContent = errorMsg;
-                            errorElement.style.display = 'flex';
-                        }
-                    });
-                    
-                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                    video.src = source;
-                    player = new Plyr(video);
-                    loadingElement.style.display = 'none';
-                } else {
-                    loadingElement.style.display = 'none';
-                    errorText.textContent = 'Your browser does not support HLS playback';
-                    errorElement.style.display = 'flex';
+                if (lastDemo && (currentTime - lastDemo) < oneHour) {
+                    // User is still blocked
+                    blockedMessage.classList.add('show');
+                    demoOverlay.classList.add('show');
+                    return true;
                 }
+                return false;
             }
-            
-            retryBtn.addEventListener('click', initPlayer);
-            
-            notification.addEventListener('click', () => {
-                window.open('https://t.me/livecricket_abot', '_blank');
-                notification.classList.remove('show');
-            });
-            
-            document.addEventListener('fullscreenchange', () => {
-                if (document.fullscreenElement) {
-                    if (screen.orientation?.lock) {
-                        screen.orientation.lock('landscape').catch(console.error);
+
+            // Start demo timer
+            function startDemoTimer() {
+                if (checkBlockStatus()) return;
+                
+                timerDisplay.style.display = 'block';
+                
+                demoTimer = setInterval(() => {
+                    remainingTime--;
+                    const minutes = Math.floor(remainingTime / 60);
+                    const seconds = remainingTime % 60;
+                    timerText.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    
+                    if (remainingTime <= 0) {
+                        clearInterval(demoTimer);
+                        endDemo();
                     }
-                } else {
-                    if (screen.orientation?.unlock) {
-                        screen.orientation.unlock().catch(console.error);
-                    }
+                }, 1000);
+            }
+
+            // End demo and show overlay
+            function endDemo() {
+                if (player) {
+                    video.pause();
                 }
-            });
-            
-            initPlayer();
-        });
+                timerDisplay.style.display = 'none';
+                demoOverlay.classList.add('show');
+                localStorage.setItem('lastDemoTime', Date.now().toString());
+            }
+              
+            function initPlayer() {
+                if (checkBlockStatus()) return;
+                
+                loadingElement.style.display = 'flex';  
+                errorElement.style.display = 'none';  
+                  
+                if (Hls.isSupported()) {  
+                    if (hls) hls.destroy();  
+                      
+                    hls = new Hls({  
+                        maxMaxBufferLength: 100,  
+                        enableWorker: true,  
+                        lowLatencyMode: true  
+                    });  
+                      
+                    hls.loadSource(source);  
+                    hls.attachMedia(video);  
+                      
+                    hls.on(Hls.Events.MANIFEST_PARSED, () => {  
+                        const availableQualities = hls.levels.map(level => level.height);  
+                        const defaultQuality = availableQualities[0];  
+                          
+                        player = new Plyr(video, {  
+                            controls: [  
+                                'play-large',  
+                                'play',  
+                                'progress',  
+                                'current-time',  
+                                'mute',  
+                                'volume',  
+                                'settings',  
+                                'fullscreen'  
+                            ],  
+                            settings: ['quality', 'speed'],  
+                            quality: {  
+                                default: defaultQuality,  
+                                options: availableQualities,  
+                                forced: true,  
+                                onChange: (quality) => {  
+                                    hls.levels.forEach((level, levelIndex) => {  
+                                        if (level.height === quality) {  
+                                            hls.currentLevel = levelIndex;  
+                                        }  
+                                    });  
+                                }  
+                            }  
+                        });  
+                          
+                        loadingElement.style.display = 'none';
+                        startDemoTimer(); // Start the demo timer
+                          
+                        // Show notification after 5 seconds  
+                        setTimeout(() => {  
+                            notification.classList.add('show');  
+                            setTimeout(() => {  
+                                notification.classList.remove('show');  
+                            }, 8000);  
+                        }, 5000);  
+                    });  
+                      
+                    hls.on(Hls.Events.ERROR, (event, data) => {  
+                        if (data.fatal) {  
+                            let errorMsg = 'Error loading stream';  
+                              
+                            switch(data.type) {  
+                                case Hls.ErrorTypes.NETWORK_ERROR:  
+                                    errorMsg = 'Network error: Failed to load stream';  
+                                    break;  
+                                case Hls.ErrorTypes.MEDIA_ERROR:  
+                                    errorMsg = 'Media error: Corrupted stream data';  
+                                    hls.recoverMediaError();  
+                                    break;  
+                                default:  
+                                    errorMsg = 'Error loading stream';  
+                                    break;  
+                            }  
+                              
+                            loadingElement.style.display = 'none';  
+                            errorText.textContent = errorMsg;  
+                            errorElement.style.display = 'flex';  
+                        }  
+                    });  
+                      
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {  
+                    video.src = source;  
+                    player = new Plyr(video);  
+                    loadingElement.style.display = 'none';
+                    startDemoTimer(); // Start the demo timer
+                } else {  
+                    loadingElement.style.display = 'none';  
+                    errorText.textContent = 'Your browser does not support HLS playback';  
+                    errorElement.style.display = 'flex';  
+                }  
+            }  
+              
+            // Handle retry button  
+            retryBtn.addEventListener('click', initPlayer);  
+              
+            // Handle notification click  
+            notification.addEventListener('click', () => {  
+                window.open('https://t.me/livecricket_abot', '_blank');  
+                notification.classList.remove('show');  
+            });  
+              
+            // Handle fullscreen orientation  
+            document.addEventListener('fullscreenchange', () => {  
+                if (document.fullscreenElement) {  
+                    if (screen.orientation?.lock) {  
+                        screen.orientation.lock('landscape').catch(console.error);  
+                    }  
+                } else {  
+                    if (screen.orientation?.unlock) {  
+                        screen.orientation.unlock().catch(console.error);  
+                    }  
+                }  
+            });  
+              
+            // Initialize player  
+            initPlayer();  
+        });  
     </script>
-</body>
+
+    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool'></script>    
+    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool'></script>    
+    <script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool'></script>  
+</body>  
 </html>
