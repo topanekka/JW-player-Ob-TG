@@ -1,94 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Live Stream Player</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
-  <meta name="referrer" content="no-referrer"/>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css"/>
-  <script disable-devtool-auto src="https://cdn.jsdelivr.net/npm/disable-devtool"></script>
-  
-  <style>
-    :root {
-      --primary: #00a8ff;
-      --secondary: #9c27b0;
-      --danger: #ff1744;
-      --success: #4caf50;
-    }
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
 
+  <style>
     body {
       margin: 0;
-      padding: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
+      background: #000;
       color: #fff;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+      font-family: Arial, sans-serif;
     }
-
-    .header {
-      padding: 14px 18px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-bottom: 2px solid rgba(255,255,255,0.15);
-      font-weight: bold;
-      font-size: 1.2em;
-      letter-spacing: 1px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    }
-
-    .player-container {
-      flex: 1;
+    .player-wrapper {
       position: relative;
-    }
-
-    #player {
       width: 100%;
-      height: 100%;
+      height: 100vh;
       background: #000;
     }
-
-    .loading, .error-message {
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    #loading, #error-message {
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      display: flex;
-      flex-direction: column;
+      display: none;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
       background: rgba(0,0,0,0.8);
-      z-index: 10;
+      z-index: 1000;
+      color: #fff;
     }
-
-    .spinner {
-      width: 50px; height: 50px;
-      border: 5px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-      border-top-color: var(--primary);
-      animation: spin 1s linear infinite;
-      margin-bottom: 15px;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .btn {
-      background: var(--primary);
+    #retry-btn {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #00a8ff;
       border: none;
-      color: white;
-      padding: 10px 20px;
+      color: #fff;
       border-radius: 6px;
       cursor: pointer;
-      font-weight: bold;
-      transition: 0.3s;
     }
-    .btn:hover {
-      background: var(--secondary);
+    #notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #00a8ff;
+      padding: 12px 18px;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 14px;
+      display: none;
+      cursor: pointer;
+      z-index: 1500;
+      animation: slideIn 0.5s ease-out;
+    }
+    #notification.show {
+      display: block;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
     }
 
-    /* Force download overlay */
+    /* -------- Force download overlay (professional look) -------- */
     .download-overlay {
       position: absolute;
       top: 0; left: 0;
@@ -98,69 +77,86 @@
       align-items: center;
       text-align: center;
       backdrop-filter: blur(10px);
-      background: rgba(0,0,0,0.6);
-      z-index: 20;
+      background: rgba(0,0,0,0.65);
+      z-index: 2000;
       flex-direction: column;
       padding: 20px;
-      animation: fadeIn 0.5s ease-in-out;
+      animation: fadeIn 0.6s ease-in-out;
     }
-
     .overlay-box {
-      background: rgba(255,255,255,0.1);
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-      max-width: 400px;
+      background: linear-gradient(135deg, rgba(0,168,255,0.9), rgba(156,39,176,0.9));
+      padding: 35px 25px;
+      border-radius: 18px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      max-width: 420px;
+      width: 90%;
+      color: #fff;
+      text-align: center;
+      animation: popUp 0.4s ease-out;
     }
-
     .overlay-title {
-      font-size: 1.5em;
-      margin-bottom: 15px;
-      color: var(--primary);
+      font-size: 1.6em;
       font-weight: bold;
+      margin-bottom: 12px;
+      color: #fff;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.4);
     }
-
+    .overlay-box p {
+      font-size: 1.05em;
+      line-height: 1.5;
+      margin-bottom: 18px;
+      color: #f1f1f1;
+    }
     .countdown {
-      margin: 15px 0;
+      margin: 12px 0 18px;
       font-size: 1.1em;
-      color: var(--danger);
+      font-weight: bold;
+      color: #ffeb3b;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
     }
-
+    .overlay-box .btn {
+      background: #ff1744;
+      border: none;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-size: 1em;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+    }
+    .overlay-box .btn:hover {
+      background: #e91e63;
+      transform: translateY(-2px);
+    }
     @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+    @keyframes popUp { from {transform:scale(0.9);} to {transform:scale(1);} }
   </style>
 </head>
 <body>
-  <div class="header">🎥 Live Stream Player</div>
-  
-  <div class="player-container">
-    <div class="loading" id="loading">
-      <div class="spinner"></div>
-      <div>Loading stream...</div>
+  <div class="player-wrapper">
+    <video id="player" playsinline controls></video>
+    <div id="loading">Loading stream...</div>
+    <div id="error-message">
+      <p id="error-text">Error loading stream</p>
+      <button id="retry-btn">Retry</button>
     </div>
-    
-    <div class="error-message" id="error-message" style="display:none;">
-      <div id="error-text"></div>
-      <button class="btn" id="retry-btn">Retry</button>
-    </div>
+    <div id="notification">⚡ Join our Telegram for updates</div>
 
-    <video id="player" autoplay muted controls crossorigin playsinline></video>
-
-    <!-- Force Download Overlay -->
-    <div class="download-overlay" id="download-overlay">
+    <!-- Force download overlay -->
+    <div class="download-overlay" id="downloadOverlay">
       <div class="overlay-box">
-        <div class="overlay-title">⏱️ Demo Time Ended</div>
-        <p>You can only watch <b>2 minutes</b> demo on web.<br>
-        Please download our app to continue watching live streams.</p>
-        <div class="countdown" id="cooldown-timer"></div>
-        <a href="https://myapp-aslsports.vercel.app" target="_blank">
-          <button class="btn">📲 Download App</button>
-        </a>
+        <h2 class="overlay-title">⏳ Demo Ended</h2>
+        <p>Please download our app to continue watching live streams.</p>
+        <div class="countdown" id="countdown">You can try again in 60:00</div>
+        <a href="https://myapp-aslsports.vercel.app" target="_blank" class="btn">📲 Download App</a>
       </div>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.3/dist/hls.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const video = document.getElementById('player');
@@ -168,90 +164,100 @@
       const errorElement = document.getElementById('error-message');
       const errorText = document.getElementById('error-text');
       const retryBtn = document.getElementById('retry-btn');
-      const overlay = document.getElementById('download-overlay');
-      const cooldownTimer = document.getElementById('cooldown-timer');
+      const notification = document.getElementById('notification');
+      const downloadOverlay = document.getElementById('downloadOverlay');
+      const countdownElement = document.getElementById('countdown');
 
-      const DEMO_TIME = 120000; // 2 min
-      const BLOCK_TIME = 60 * 60 * 1000; // 1 hour
-      const BLOCK_KEY = "asl_sports_block_until";
-
-      let hls, player, demoTimeout;
-
-      function isBlocked() {
-        const until = localStorage.getItem(BLOCK_KEY);
-        return until && Date.now() < parseInt(until);
+      // Demo restriction timer storage
+      const lastWatched = localStorage.getItem('demoEndTime');
+      if (lastWatched && Date.now() < parseInt(lastWatched)) {
+        showOverlay();
       }
 
-      function showOverlay() {
-        video.pause();
-        overlay.style.display = "flex";
-        const blockUntil = Date.now() + BLOCK_TIME;
-        localStorage.setItem(BLOCK_KEY, blockUntil);
-        updateCooldown();
-        setInterval(updateCooldown, 1000);
-      }
-
-      function updateCooldown() {
-        const until = parseInt(localStorage.getItem(BLOCK_KEY));
-        const remaining = until - Date.now();
-        if (remaining > 0) {
-          const m = Math.floor(remaining / 60000);
-          const s = Math.floor((remaining % 60000) / 1000);
-          cooldownTimer.textContent = `⏳ Try again in ${m}m ${s}s`;
-        } else {
-          cooldownTimer.textContent = "You can refresh now.";
-        }
-      }
+      let hls;
+      let player;
 
       function initPlayer() {
-        if (isBlocked()) {
-          showOverlay();
-          return;
-        }
+        loadingElement.style.display = 'flex';
+        errorElement.style.display = 'none';
 
         const urlParams = new URLSearchParams(window.location.search);
-        let source = urlParams.get("url") || 
-          "https://dai.google.com/linear/hls/event/gw6vKyUhQDOxptPtHIn22g/master.m3u8";
-
-        loadingElement.style.display = "flex";
-        errorElement.style.display = "none";
+        let source = urlParams.get('url') || "https://dai.google.com/linear/hls/event/gw6vKyUhQDOxptPtHIn22g/master.m3u8";
 
         if (Hls.isSupported()) {
           if (hls) hls.destroy();
-          hls = new Hls();
+          hls = new Hls({ maxMaxBufferLength: 100, enableWorker: true, lowLatencyMode: true });
           hls.loadSource(source);
           hls.attachMedia(video);
 
           hls.on(Hls.Events.MANIFEST_PARSED, () => {
             player = new Plyr(video);
-            loadingElement.style.display = "none";
+            loadingElement.style.display = 'none';
 
-            clearTimeout(demoTimeout);
-            demoTimeout = setTimeout(showOverlay, DEMO_TIME);
+            // Force stop after 2 minutes
+            setTimeout(() => {
+              if (!video.paused) video.pause();
+              localStorage.setItem('demoEndTime', Date.now() + 3600000); // lock for 1 hour
+              showOverlay();
+            }, 120000);
+
+            // Show notification after 5s
+            setTimeout(() => {
+              notification.classList.add('show');
+              setTimeout(() => notification.classList.remove('show'), 8000);
+            }, 5000);
           });
 
-          hls.on(Hls.Events.ERROR, (e, data) => {
+          hls.on(Hls.Events.ERROR, (event, data) => {
             if (data.fatal) {
-              errorText.textContent = "Stream error. Please retry.";
-              errorElement.style.display = "flex";
-              loadingElement.style.display = "none";
+              let errorMsg = 'Error loading stream';
+              switch(data.type) {
+                case Hls.ErrorTypes.NETWORK_ERROR: errorMsg = 'Network error'; break;
+                case Hls.ErrorTypes.MEDIA_ERROR: errorMsg = 'Media error'; hls.recoverMediaError(); break;
+              }
+              loadingElement.style.display = 'none';
+              errorText.textContent = errorMsg;
+              errorElement.style.display = 'flex';
             }
           });
-        } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
           video.src = source;
           player = new Plyr(video);
-          loadingElement.style.display = "none";
-          demoTimeout = setTimeout(showOverlay, DEMO_TIME);
+          loadingElement.style.display = 'none';
         } else {
-          errorText.textContent = "Browser not supported.";
-          errorElement.style.display = "flex";
-          loadingElement.style.display = "none";
+          loadingElement.style.display = 'none';
+          errorText.textContent = 'Your browser does not support HLS';
+          errorElement.style.display = 'flex';
         }
       }
 
-      retryBtn.addEventListener("click", initPlayer);
+      retryBtn.addEventListener('click', initPlayer);
+
+      function showOverlay() {
+        downloadOverlay.style.display = 'flex';
+        startCountdown();
+      }
+
+      function startCountdown() {
+        const endTime = parseInt(localStorage.getItem('demoEndTime'));
+        if (!endTime) return;
+        const interval = setInterval(() => {
+          const remaining = endTime - Date.now();
+          if (remaining <= 0) {
+            clearInterval(interval);
+            countdownElement.textContent = "You can now refresh to try again";
+            localStorage.removeItem('demoEndTime');
+          } else {
+            const mins = Math.floor(remaining / 60000);
+            const secs = Math.floor((remaining % 60000) / 1000);
+            countdownElement.textContent = `You can try again in ${mins}:${secs.toString().padStart(2,'0')}`;
+          }
+        }, 1000);
+      }
+
       initPlayer();
     });
   </script>
 </body>
-  </html>
+</html>
